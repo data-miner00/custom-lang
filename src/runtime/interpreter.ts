@@ -71,8 +71,6 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
   switch (astNode.kind) {
     case "NumericLiteral":
       return MK_NUM((astNode as NumericLiteral).value);
-    case "NullLiteral":
-      return MK_NUL();
     case "Identifier":
       return evalIdentifier(astNode as Identifier, env);
     case "BinaryExpr":

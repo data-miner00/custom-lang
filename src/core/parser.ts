@@ -5,7 +5,6 @@ import {
   BinaryExpr,
   NumericLiteral,
   Identifier,
-  NullLiteral,
 } from "./ast";
 import { tokenize, Token, TokenType } from "./lexer";
 
@@ -64,13 +63,6 @@ export default class Parser {
           symbol: this.advance().value,
         } as Identifier;
 
-      case TokenType.Null:
-        this.advance();
-        return {
-          kind: "NullLiteral",
-          value: "null",
-        } as NullLiteral;
-
       case TokenType.Number:
         return {
           kind: "NumericLiteral",
@@ -105,6 +97,7 @@ export default class Parser {
 
     return left;
   }
+
   private parseMultiplicativeExpr(): Expr {
     let left = this.parsePrimaryExpr();
 
