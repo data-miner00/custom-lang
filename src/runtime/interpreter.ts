@@ -1,4 +1,11 @@
-import { NullVal, RuntimeVal, ValueType, NumberVal } from "./values";
+import {
+  NullVal,
+  RuntimeVal,
+  ValueType,
+  NumberVal,
+  MK_NUL,
+  MK_NUM,
+} from "./values";
 import {
   BinaryExpr,
   Identifier,
@@ -20,7 +27,7 @@ function evaluateBinaryExpr(binop: BinaryExpr, env: Environment): RuntimeVal {
       binop.operator
     );
   }
-  return { type: "null", value: "null" } as NullVal;
+  return MK_NUL();
 }
 
 function evalNumericBinaryExpr(
@@ -42,14 +49,11 @@ function evalNumericBinaryExpr(
     results = lhs.value % rhs.value;
   }
 
-  return { value: results, type: "number" };
+  return MK_NUM(results);
 }
 
 function evaluateProgram(program: Program, env: Environment): RuntimeVal {
-  let lastEvaluated: RuntimeVal = {
-    type: "null",
-    value: "null",
-  } as NullVal;
+  let lastEvaluated: RuntimeVal = MK_NUL();
 
   for (const statement of program.body) {
     lastEvaluated = evaluate(statement, env);
@@ -66,12 +70,9 @@ function evalIdentifier(id: Identifier, env: Environment) {
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
   switch (astNode.kind) {
     case "NumericLiteral":
-      return {
-        value: (astNode as NumericLiteral).value,
-        type: "number",
-      } as NumberVal;
+      return MK_NUM((astNode as NumericLiteral).value);
     case "NullLiteral":
-      return { value: "null", type: "null" } as NullVal;
+      return MK_NUL();
     case "Identifier":
       return evalIdentifier(astNode as Identifier, env);
     case "BinaryExpr":
