@@ -1,8 +1,13 @@
 import Parser from "./core/parser";
+import Environment from "./runtime/environment";
 import { evaluate } from "./runtime/interpreter";
+import { NumberVal } from "./runtime/values";
+import settings from "./settings.json";
 
 async function repl() {
   const parser = new Parser();
+  const env = new Environment();
+  env.declareVariable("x", { value: 100, type: "number" } as NumberVal);
   console.log("\nRepl v0.1");
 
   while (true) {
@@ -12,9 +17,9 @@ async function repl() {
     }
 
     const program = parser.produceAST(input);
-    console.log(program);
+    settings.debug && console.log(program);
 
-    const result = evaluate(program);
+    const result = evaluate(program, env);
     console.log(result);
   }
 }
