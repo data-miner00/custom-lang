@@ -12,13 +12,16 @@ export enum TokenType {
   Equals,
   OpenParen,
   CloseParen,
+  Semicolon,
   BinaryOperator,
   Let,
+  Const,
   EOF,
 }
 
 const KEYWORDS: Record<string, TokenType> = {
   let: TokenType.Let,
+  const: TokenType.Const,
 };
 
 function isalpha(src: string): boolean {
@@ -50,6 +53,8 @@ export function tokenize(src: string): Token[] {
       tokens.push({ type: TokenType.BinaryOperator, value: sources.shift()! });
     } else if (current == "=") {
       tokens.push({ type: TokenType.Equals, value: sources.shift()! });
+    } else if (current == ";") {
+      tokens.push({ type: TokenType.Semicolon, value: sources.shift()! });
     } else {
       // handle multicharacter token
       if (isint(current)) {

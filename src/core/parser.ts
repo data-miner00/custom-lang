@@ -5,6 +5,7 @@ import {
   BinaryExpr,
   NumericLiteral,
   Identifier,
+  VarDeclaration,
 } from "./ast";
 import { tokenize, Token, TokenType } from "./lexer";
 
@@ -39,7 +40,54 @@ export default class Parser {
   }
 
   private parseStmt(): Stmt {
-    return this.parseExpr();
+    switch (this.at().type) {
+      case TokenType.Let:
+      case TokenType.Const:
+        return this.parseVarDeclaration();
+      default:
+        return this.parseExpr();
+    }
+  }
+
+  private parseVarDeclaration(): Stmt {
+    const isConstant = this.advance().type == TokenType.Const;
+    const identifier = this.expect(
+      TokenType.Identifier,
+      "Expected identifier name following let | const keywords."
+    ).value;
+
+    if (this.at().type == TokenType.Semicolon) {
+      this.advance();
+
+      if (isConstant) {
+        throw "Must assign value to constant expression. No value provided.";
+      }
+
+      return {
+        kind: "VarDeclaration",
+        identifier,
+        constant: false,
+      } as VarDeclaration;
+    }
+
+    this.expect(
+      TokenType.Equals,
+      "Expected equals token following identifier in var declaration."
+    );
+
+    const declaration = {
+      kind: "VarDeclaration",
+      value: this.parseExpr(),
+      identifier,
+      constant: isConstant,
+    } as VarDeclaration;
+
+    this.expect(
+      TokenType.Semicolon,
+      "Variable declaration statement must end with semicolon."
+    );
+
+    return declaration;
   }
 
   private parseExpr(): Expr {
@@ -48,6 +96,10 @@ export default class Parser {
 
   private advance() {
     return this.tokens.shift() as Token;
+  }
+
+  private at() {
+    return this.tokens[0] as Token;
   }
 
   // Order of precedence
