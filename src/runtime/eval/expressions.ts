@@ -1,4 +1,9 @@
-import { BinaryExpr, Identifier, VarDeclaration } from "../../core/ast";
+import {
+  AssignmentExpr,
+  BinaryExpr,
+  Identifier,
+  VarDeclaration,
+} from "../../core/ast";
 import Environment from "../environment";
 import { evaluate } from "../interpreter";
 import { RuntimeVal, NumberVal, MK_NUL, MK_NUM } from "../values";
@@ -45,4 +50,13 @@ export function evalNumericBinaryExpr(
 export function evalIdentifier(id: Identifier, env: Environment) {
   const val = env.lookupVar(id.symbol);
   return val;
+}
+
+export function evalAssignment(node: AssignmentExpr, env: Environment) {
+  if (node.assignee.kind !== "Identifier") {
+    throw new Error("Invalid LHS inside assignment expression");
+  }
+
+  const varname = (node.assignee as Identifier).symbol;
+  return env.assignVar(varname, evaluate(node.value, env));
 }

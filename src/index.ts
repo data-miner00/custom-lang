@@ -8,10 +8,10 @@ async function repl() {
   const parser = new Parser();
   const env = new Environment();
 
-  env.declareVariable("x", MK_NUM(100));
-  env.declareVariable("true", MK_BUL(true));
-  env.declareVariable("false", MK_BUL(false));
-  env.declareVariable("null", MK_NUL());
+  env.declareVariable("x", MK_NUM(100), true);
+  env.declareVariable("true", MK_BUL(true), true);
+  env.declareVariable("false", MK_BUL(false), true);
+  env.declareVariable("null", MK_NUL(), true);
 
   console.log("\nRepl v0.1");
 

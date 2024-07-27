@@ -6,6 +6,7 @@ import {
   NumericLiteral,
   Identifier,
   VarDeclaration,
+  AssignmentExpr,
 } from "./ast";
 import { tokenize, Token, TokenType } from "./lexer";
 
@@ -91,7 +92,23 @@ export default class Parser {
   }
 
   private parseExpr(): Expr {
-    return this.parseAdditiveExpr();
+    return this.parseAssignmentExpr();
+  }
+
+  private parseAssignmentExpr(): Expr {
+    const left = this.parseAdditiveExpr();
+    if (this.at().type == TokenType.Equals) {
+      this.advance(); // x = foo = bar chaining
+      const value = this.parseAssignmentExpr();
+
+      return {
+        value,
+        assignee: left,
+        kind: "AssignmentExpr",
+      } as AssignmentExpr;
+    }
+
+    return left;
   }
 
   private advance() {
@@ -128,8 +145,7 @@ export default class Parser {
         return value;
 
       default:
-        console.error("Unexpected token found");
-        return {} as Stmt;
+        throw new Error("Unexpected token found");
     }
   }
 

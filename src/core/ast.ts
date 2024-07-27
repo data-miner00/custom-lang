@@ -8,7 +8,8 @@ export type NodeType =
   | "BinaryExpr"
   | "CallExpr"
   | "UnaryExpr"
-  | "FunctionDeclaration";
+  | "FunctionDeclaration"
+  | "AssignmentExpr";
 
 export interface Stmt {
   kind: NodeType;
@@ -43,4 +44,10 @@ export interface Identifier extends Expr {
 export interface NumericLiteral extends Expr {
   kind: "NumericLiteral";
   value: number;
+}
+
+export interface AssignmentExpr extends Expr {
+  kind: "AssignmentExpr";
+  assignee: Expr;
+  value: Expr;
 }

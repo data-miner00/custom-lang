@@ -7,6 +7,7 @@ import {
   MK_NUM,
 } from "./values";
 import {
+  AssignmentExpr,
   BinaryExpr,
   Identifier,
   NodeType,
@@ -16,7 +17,11 @@ import {
   VarDeclaration,
 } from "../core/ast";
 import Environment from "./environment";
-import { evalIdentifier, evaluateBinaryExpr } from "./eval/expressions";
+import {
+  evalAssignment,
+  evalIdentifier,
+  evaluateBinaryExpr,
+} from "./eval/expressions";
 import { evaluateProgram, evalVarDeclaration } from "./eval/statements";
 
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
@@ -25,6 +30,8 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
       return MK_NUM((astNode as NumericLiteral).value);
     case "Identifier":
       return evalIdentifier(astNode as Identifier, env);
+    case "AssignmentExpr":
+      return evalAssignment(astNode as AssignmentExpr, env);
     case "BinaryExpr":
       return evaluateBinaryExpr(astNode as BinaryExpr, env);
     case "Program":
