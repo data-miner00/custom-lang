@@ -7,9 +7,14 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "bun run ./src/index.ts"
+    "start": "bun run ./src/index.ts",
+    "format": "prettier . --write",
+    "check": "prettier . --check"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
 }
