@@ -1,0 +1,15 @@
+{
+  "name": "custom-lang",
+  "version": "1.0.0",
+  "description": "Trying out to write an interpreter.",
+  "main": "src/index.ts",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "bun run ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
